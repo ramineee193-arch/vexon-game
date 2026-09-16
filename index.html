@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>VEXON GAME</title>
+
+<style>
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    background: #11151b;
+    color: white;
+    font-family: Arial, sans-serif;
+    text-align: center;
+}
+
+.game {
+    max-width: 500px;
+    margin: auto;
+    padding: 25px 15px;
+}
+
+h1 {
+    margin-bottom: 8px;
+}
+
+.stats {
+    display: flex;
+    justify-content: space-between;
+    background: #1d2530;
+    padding: 15px;
+    border-radius: 15px;
+    margin: 20px 0;
+}
+
+#arena {
+    position: relative;
+    height: 430px;
+    background: #1a2029;
+    border-radius: 20px;
+    overflow: hidden;
+}
+
+#target {
+    position: absolute;
+    width: 65px;
+    height: 65px;
+    border-radius: 50%;
+    background: #2997ff;
+    border: 4px solid white;
+    display: none;
+    cursor: pointer;
+    box-shadow: 0 0 20px #2997ff;
+}
+
+button {
+    margin-top: 20px;
+    padding: 15px 30px;
+    border: 0;
+    border-radius: 12px;
+    background: #2997ff;
+    color: white;
+    font-size: 18px;
+    font-weight: bold;
+}
+
+#message {
+    margin-top: 15px;
+    color: #aaa;
+}
+</style>
+</head>
+
+<body>
+
+<div class="game">
+
+<h1>💎 VEXON GAME</h1>
+<p>هرچه سریع‌تر روی دایره بزن!</p>
+
+<div class="stats">
+    <span>امتیاز: <b id="score">0</b></span>
+    <span>زمان: <b id="time">30</b></span>
+</div>
+
+<div id="arena">
+    <div id="target"></div>
+</div>
+
+<button id="start">شروع بازی</button>
+
+<div id="message">برای شروع روی دکمه بزن</div>
+
+</div>
+
+<script>
+const target = document.getElementById("target");
+const scoreEl = document.getElementById("score");
+const timeEl = document.getElementById("time");
+const startBtn = document.getElementById("start");
+const message = document.getElementById("message");
+const arena = document.getElementById("arena");
+
+let score = 0;
+let time = 30;
+let timer = null;
+let playing = false;
+
+function moveTarget() {
+    const maxX = arena.clientWidth - target.offsetWidth;
+    const maxY = arena.clientHeight - target.offsetHeight;
+
+    const x = Math.random() * maxX;
+    const y = Math.random() * maxY;
+
+    target.style.left = x + "px";
+    target.style.top = y + "px";
+}
+
+function startGame() {
+    score = 0;
+    time = 30;
+    playing = true;
+
+    scoreEl.textContent = score;
+    timeEl.textContent = time;
+
+    target.style.display = "block";
+    startBtn.disabled = true;
+    message.textContent = "بزن! ⚡";
+
+    moveTarget();
+
+    timer = setInterval(() => {
+        time--;
+        timeEl.textContent = time;
+
+        if (time <= 0) {
+            endGame();
+        }
+    }, 1000);
+}
+
+function hitTarget() {
+    if (!playing) return;
+
+    score++;
+    scoreEl.textContent = score;
+
+    moveTarget();
+}
+
+function endGame() {
+    clearInterval(timer);
+    playing = false;
+
+    target.style.display = "none";
+    startBtn.disabled = false;
+
+    message.textContent = "بازی تمام شد! امتیاز شما: " + score;
+}
+
+target.addEventListener("click", hitTarget);
+startBtn.addEventListener("click", startGame);
+</script>
+
+</body>
+</html>
